@@ -1,25 +1,70 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import CardArray from './components/CardArray'
+import SearchBox from './components/SearchBox'
+import 'tachyons'
+import Scroll from './components/Scroll'
+import { setSearchField } from './actions'
+import { connect } from 'react-redux'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+
+
+const mapStateToProps = state => {
+  return{
+    searchField: state.searchField
+  }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return{
+  onSearchChange: (e) => dispatch(setSearchField(e.target.value))
+}}
+
+
+
+
+
+
+
+class App extends Component {
+
+constructor(){
+  super()
+  this.state = {
+    robots: [],
+  }
+}
+
+
+  componentDidMount(){
+
+     fetch('https://jsonplaceholder.typicode.com/users')
+    .then(res => res.json())
+    .then(data => this.setState({robots: data}))
+  }
+
+
+  render() {
+    const {robots} = this.state
+    const {searchField, onSearchChange } = this.props
+    const filteredRobots = robots.filter(robot => {
+      return robot.name.toLowerCase().includes(searchField.toLowerCase())
+    })
+
+    if(robots.length === 0){
+      return <h1 className=' white ' >Loading</h1>
+    }else{
+    return (
+      <div className='tc mb3' >
+      <h1>Robo Friends</h1>
+      <SearchBox onSearchChange = {onSearchChange} searchField = {searchField} />
+      <Scroll>
+       <CardArray robots = {filteredRobots} />
+      </Scroll>
+      </div>
+    )}
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
