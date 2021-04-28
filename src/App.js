@@ -5,6 +5,7 @@ import 'tachyons'
 import Scroll from './components/Scroll'
 import { requestRobots, setSearchField } from './actions'
 import { connect } from 'react-redux'
+import Header from './components/Header'
 
 
 const CardArray = lazy(() => import('./components/CardArray'))
@@ -50,7 +51,8 @@ class App extends Component {
     }else{
     return (
       <div className='tc mb3' >
-      <h1 className='white' >Robo Friends</h1>
+      {/* <h1 className='white' >Robo Friends</h1> */}
+      <Header />
       <SearchBox onSearchChange = {onSearchChange} searchField = {searchField} />
       <Scroll>
         <Suspense fallback={<div>Loading...</div>}>
