@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import CardArray from './components/CardArray'
+import React, { Component, lazy, Suspense } from 'react'
+//import CardArray from './components/CardArray'
 import SearchBox from './components/SearchBox'
 import 'tachyons'
 import Scroll from './components/Scroll'
@@ -7,7 +7,7 @@ import { requestRobots, setSearchField } from './actions'
 import { connect } from 'react-redux'
 
 
-
+const CardArray = lazy(() => import('./components/CardArray'))
 
 
 const mapStateToProps = state => {
@@ -53,7 +53,10 @@ class App extends Component {
       <h1 className='white' >Robo Friends</h1>
       <SearchBox onSearchChange = {onSearchChange} searchField = {searchField} />
       <Scroll>
-       <CardArray robots = {filteredRobots} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <CardArray robots = {filteredRobots} />
+        </Suspense>
+       
       </Scroll>
       </div>
     )}
